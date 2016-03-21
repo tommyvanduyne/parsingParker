@@ -1,6 +1,8 @@
 # Parsing Parker
-###Authors: 
-Thomas Van Duyne and Allison Tetreault
+###About the Authors: 
+Thomas Van Duyne - Wrote the software
+
+Allison Tetreault - Authored the research report
 ###Description:
 This application prompts the user for three things:
 
