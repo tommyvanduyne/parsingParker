@@ -1,6 +1,8 @@
 '''
 APP: Parse Parker
-AUTHORS: Thomas Van Duyne and Allison Tetreault
+AUTHORS:
+Thomas Van Duyne - Wrote the software
+Allison Tetreault - Authored the research report
 
 DESCRIPTION:
 This application prompts the user for three things:
