@@ -63,6 +63,8 @@ def main():
                 raise ValueError('empty string')
             elif not is_int(start_spot):
                 print "Please input an integer..."
+            elif int(start_spot) <= 0:
+                print "Smallest interval must be greater than 0"
             else:
                 start_spot = int(start_spot)
         except ValueError as e:
@@ -86,7 +88,7 @@ def main():
     #get input folder
     while not os.path.isdir(input_folder):
         try:
-            input_folder = raw_input("Input Folder (empty for defaul CSVs folder) ?:\t")
+            input_folder = raw_input("Input Folder (defaults to 'CSVs')?:\t")
             if input_folder == "":
                 input_folder = "CSVs"
             elif not os.path.isdir(input_folder):
