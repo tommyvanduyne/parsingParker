@@ -37,6 +37,4 @@ and scrapes them for meaningful data to manipulate and print out.
     in a single file.  It gets updated each time the user runs the program and reflects the chosen 
     interval sets.
 
-Date last modified: 3/21/2015
-
 
