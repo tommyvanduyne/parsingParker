@@ -14,14 +14,12 @@ and run a variety of functions on them to create meaningful data for the user.
 It then prints this data out in the 'outputs', 'ngrams', and 'ngramCollective' 
 folders as TXT files.
 
-###INPUT:
+###Input:
 
 This application takes in whatever CSV files are present in the given input folder (defaults to 'CSVs')
 and scrapes them for meaningful data to manipulate and print out.
 
-###OUTPUTS:
-
-####FOLDERS:
+###Output:
 
 1. outputs
     - In this folder, the user will find the outputted files comparing the relative frequency 
