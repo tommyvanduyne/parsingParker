@@ -39,7 +39,7 @@ OUTPUTS:
 Date last modified: 4/29/2014
 '''
 import glob
-
+import os
 def main():
     #global variable declaration
     output_folder = "outputs"
@@ -51,12 +51,48 @@ def main():
     end_spot = 1 #default value
 
     #Prompt user for some specifications
-    start_spot = int(input("Smallest interval set?:\t"))
-    end_spot = int(input("Largest interval set?:\t"))
-    input_folder = input("Input Folder?:\t")
-    if input_folder == "":
-        input_folder = "CSVs"
+    start_spot = ''
+    end_spot = ''
+    input_folder = ''
+    
+    #get start_spot
+    while type(start_spot) is not int:
+        try:
+            start_spot = raw_input("Smallest interval set?:\t")
+            if not start_spot:
+                raise ValueError('empty string')
+            elif not is_int(start_spot):
+                print "Please input an integer..."
+            else:
+                start_spot = int(start_spot)
+        except ValueError as e:
+            print e
 
+    #get end_spot
+    while type(end_spot) is not int:
+        try:
+            end_spot = raw_input("Largest interval set?:\t")
+            if not end_spot:
+                raise ValueError('empty string')
+            if not is_int(end_spot):
+                print "Please input an integer..."
+            elif start_spot > int(end_spot):
+                print "Please input an integer great than previous input"
+            else:
+                end_spot = int(end_spot)
+        except ValueError as e:
+            print e
+    
+    #get input folder
+    while not os.path.isdir(input_folder):
+        try:
+            input_folder = raw_input("Input Folder (empty for defaul CSVs folder) ?:\t")
+            if input_folder == "":
+                input_folder = "CSVs"
+            elif not os.path.isdir(input_folder):
+                print "Folder does not exist"
+        except ValueError as e:
+            print e
     
     #Dictionary used later for all the interval sets {}
     wordDictionary = {}
@@ -220,6 +256,13 @@ def getIntervals(noteList,intervalList):
         intervalList.append(interval)
         previousNote = note
 #end of getIntervals()
+
+def is_int(string):
+    try:
+        int(string)
+        return True
+    except ValueError:
+        return False
 
 if __name__ == "__main__":
     main()
