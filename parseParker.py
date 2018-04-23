@@ -13,7 +13,7 @@ This application prompts the user for three things:
 It will then intake 10 charlie parker tunes from the input folder
 (using glob so that it is not dependent on quanitity of input files)
 and run a variety of functions on them to create meaningful data for the user.
-It then prints this data out in the 'outputs', 'ngrams', and 'ngramCollective' 
+It then prints this data out in the 'outputs', 'ngrams', and 'results' 
 folders as TXT files.
 
 INPUT:
@@ -33,7 +33,7 @@ OUTPUTS:
         of these files contains a string of ngrams separated by a space so if the user so chooses, they
         could use this file to create a meaning representation for the intervals in this song via a ngram
         displayer or something else.
-    (iii)'ngramCollective'
+    (iii)'results'
         -In this folder, the user will find a single folder that contains all the ngrams from all the songs
         in a single file.  It gets updated each time the user runs the program and reflects the chosen 
         interval sets.
@@ -45,7 +45,7 @@ import os
 def main():
     #global variable declaration
     output_folder = "outputs"
-    collective_output = "ngramCollective"
+    collective_output = "results"
     ngram_folder = "ngrams"
     input_folder = "CSVs"
     fileNames = glob.glob(input_folder+"/*")
@@ -60,43 +60,43 @@ def main():
     #get start_spot
     while type(start_spot) is not int:
         try:
-            start_spot = raw_input("Smallest interval set?:\t")
+            start_spot = input("Smallest interval set?:\t")
             if not start_spot:
                 raise ValueError('empty string')
             elif not is_int(start_spot):
-                print "Please input an integer..."
+                print ("Please input an integer...")
             elif int(start_spot) <= 0:
-                print "Smallest interval must be greater than 0"
+                print ("Smallest interval must be greater than 0")
             else:
                 start_spot = int(start_spot)
         except ValueError as e:
-            print e
+            print (e)
 
     #get end_spot
     while type(end_spot) is not int:
         try:
-            end_spot = raw_input("Largest interval set?:\t")
+            end_spot = input("Largest interval set?:\t")
             if not end_spot:
                 raise ValueError('empty string')
             if not is_int(end_spot):
-                print "Please input an integer..."
+                print ("Please input an integer...")
             elif start_spot > int(end_spot):
-                print "Please input an integer great than previous input"
+                print ("Please input an integer great than previous input")
             else:
                 end_spot = int(end_spot)
         except ValueError as e:
-            print e
+            print (e)
     
     #get input folder
     while not os.path.isdir(input_folder):
         try:
-            input_folder = raw_input("Input Folder (defaults to 'CSVs')?:\t")
+            input_folder = input("Input Folder (defaults to 'CSVs')?:\t")
             if input_folder == "":
                 input_folder = "CSVs"
             elif not os.path.isdir(input_folder):
-                print "Folder does not exist"
+                print ("Folder does not exist")
         except ValueError as e:
-            print e
+            print (e)
     
     #Dictionary used later for all the interval sets {}
     wordDictionary = {}
@@ -143,7 +143,7 @@ def main():
 def printNgramList(ngramList,collective_output):
     OUTPUT = open(collective_output+"/"+"results.txt",'w')
     for gram in ngramList:
-        OUTPUT.write(gram+" ")
+        OUTPUT.write(gram+"\n")
     print("writing to "+collective_output+"/"+"results.txt")
     OUTPUT.close()
 #end of printNgramList
@@ -192,15 +192,36 @@ def crunchTheNumbers(wordDictionary,ngramList):
 # common ngrams                                                               #
 #-----------------------------------------------------------------------------#
 def n_gram_creator(intervalList,ngramList,output_folder,fileWrite,start_spot, end_spot):
+    notesSharp = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
+    notesFlat = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"]
     for n in range(start_spot,end_spot+1):
         OUTPUT = open(fileWrite+str(n)+".txt", 'w')
         i = 0
+    	#write into file with numbers
         while (i < len(intervalList)-(n-1)-1):
-            ngram_string = ""
+            ngram_stringINTERVALS = ""
             for number in range(n):
-                ngram_string = ngram_string+str(intervalList[i+number])+','     
-            OUTPUT.write(ngram_string+" ")
-            ngramList.append(ngram_string)
+                ngram_stringINTERVALS += str(intervalList[i+number])+','     
+            start = 0
+            ngram_stringNOTES = "C ";
+            for number in range(n):
+                #ngram_string = ngram_string+str(intervalList[i+number])+','     
+                interval = intervalList[i+number]
+                operator = interval[0]
+                trueInterval = interval[1:] 
+                if operator == '+': 
+                    start = start + int(trueInterval)
+                elif operator == '-': 
+                    start = start - int(trueInterval) 
+                else: # is 0
+                    operator = ''
+                    start = start
+                newLetter = notesSharp[start%12]  
+                ngram_stringNOTES += (operator + newLetter + ' ')
+            #print(ngram_stringINTERVALS + " ")
+            #print(ngram_stringNOTES + "\n")
+            OUTPUT.write(ngram_stringNOTES+" ")
+            ngramList.append(ngram_stringNOTES)
             i+=1
         OUTPUT.close()
     #end of for loops
@@ -254,9 +275,9 @@ def getIntervals(noteList,intervalList):
         interval = int(note)-int(previousNote)
         #Use M to denote upward interval and m to denote downward interval.
         if interval > 0:
-            interval = "M"+str(interval)
+            interval = "+"+str(interval)
         else:
-            interval = str(interval).replace("-","m")
+            interval = str(interval).replace("-","-")
         intervalList.append(interval)
         previousNote = note
 #end of getIntervals()
